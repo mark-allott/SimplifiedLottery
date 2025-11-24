@@ -4,12 +4,12 @@ using SimplifiedLottery.Core.Interfaces;
 namespace SimplifiedLottery.Core.Models
 {
 	public record PlayerWithIntegerWallet
-		: IPlayer
+		: IPlayer<int>
 	{
 		/// <summary>
 		/// Represents the wallet belonging to the player
 		/// </summary>
-		public IntegerWallet Wallet { get; }
+		public IWallet<int> Wallet { get; }
 
 		public PlayerWithIntegerWallet(string name, int initialFunds)
 		{
