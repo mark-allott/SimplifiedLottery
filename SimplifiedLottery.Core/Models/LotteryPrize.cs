@@ -30,10 +30,10 @@ namespace SimplifiedLottery.Core.Models
 			if (WinningPlayerCount is null && WinningTicketsPercentage is null)
 				throw new ArgumentException("No value supplied for winners");
 
-			if(WinningPlayerCount.HasValue)
+			if (WinningPlayerCount.HasValue)
 				return WinningPlayerCount.Value;
 
-			return (int)(totalTickets * (WinningTicketsPercentage.Value / 100));
+			return (int)(totalTickets * WinningTicketsPercentage.Value / 100);
 		}
 
 		/// <summary>

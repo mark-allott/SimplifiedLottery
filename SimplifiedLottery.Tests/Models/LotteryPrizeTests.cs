@@ -1,4 +1,6 @@
+using FluentAssertions;
 using SimplifiedLottery.Core.Models;
+using SimplifiedLottery.Tests.Helpers;
 
 namespace SimplifiedLottery.Tests.Models
 {
@@ -44,6 +46,30 @@ namespace SimplifiedLottery.Tests.Models
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
 				LotteryPrize.WinnersByPercentage(nameof(LotteryPrize.WinnersByPercentage), "", 1,
 					winningPlayerPercentage, 1));
+		}
+
+		[Theory]
+		[InlineData(1, 100, 1)]
+		[InlineData(1, 1000, 1)]
+		[InlineData(2, 100, 10)]
+		[InlineData(2, 106, 10)]
+		[InlineData(3, 100, 20)]
+		[InlineData(3, 101, 20)]
+		[InlineData(3, 105, 21)]
+		[InlineData(3, 1002, 200)]
+		[InlineData(3, 1005, 201)]
+		public void LotteryPrizeGetWinnerCountYieldsExpectedResult(int prizeTier, int ticketsSold, int expectedWinners)
+		{
+			var prizeDefinition = prizeTier switch
+			{
+				1 => PrizeHelper.Tier1,
+				2 => PrizeHelper.Tier2,
+				3 => PrizeHelper.Tier3,
+				_ => throw new ArgumentOutOfRangeException(nameof(prizeTier))
+			};
+
+			var actualWinners = prizeDefinition.GetWinnerCount(ticketsSold);
+			actualWinners.Should().Be(expectedWinners);
 		}
 	}
 }
