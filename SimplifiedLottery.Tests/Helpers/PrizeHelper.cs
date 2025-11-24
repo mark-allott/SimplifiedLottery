@@ -13,5 +13,7 @@ namespace SimplifiedLottery.Tests.Helpers
 
 		public static readonly IPrizeDefinition Tier3 =
 			LotteryPrize.WinnersByPercentage("Third Tier", "Low-value prizes", 10.0f, 20.0f, 100);
+
+		public static readonly List<IPrizeDefinition> AllPrizeTiers = [Tier1, Tier2, Tier3];
 	}
 }
