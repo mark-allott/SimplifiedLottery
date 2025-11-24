@@ -26,5 +26,10 @@ namespace SimplifiedLottery.Core.Interfaces
 		/// Optional: defines the total number of winners as a percentage of tickets bought
 		/// </summary>
 		double? WinningTicketsPercentage { get; }
+
+		/// <summary>
+		/// Defines the order in which the prize definitions shall be applied when allocating the prizes
+		/// </summary>
+		int AllocationOrder { get; }
 	}
 }

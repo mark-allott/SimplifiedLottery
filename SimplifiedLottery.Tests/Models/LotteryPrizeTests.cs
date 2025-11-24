@@ -10,8 +10,8 @@ namespace SimplifiedLottery.Tests.Models
 		[InlineData(" ", typeof(ArgumentException))]
 		public void LotteryPrizeMustHaveName(string? prizeName, Type expectedType)
 		{
-			Assert.Throws(expectedType, () => LotteryPrize.WinnersByCount(prizeName!, "", 1, 1));
-			Assert.Throws(expectedType, () => LotteryPrize.WinnersByPercentage(prizeName!, "", 1, 1));
+			Assert.Throws(expectedType, () => LotteryPrize.WinnersByCount(prizeName!, "", 1, 1, 1));
+			Assert.Throws(expectedType, () => LotteryPrize.WinnersByPercentage(prizeName!, "", 1, 1, 1));
 		}
 
 		[Theory]
@@ -21,9 +21,9 @@ namespace SimplifiedLottery.Tests.Models
 		public void LotteryPrizeMustHaveValidPrizePercentage(double prizePercentage)
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				LotteryPrize.WinnersByCount(nameof(LotteryPrize.WinnersByCount), "", prizePercentage, 1));
+				LotteryPrize.WinnersByCount(nameof(LotteryPrize.WinnersByCount), "", prizePercentage, 1, 1));
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				LotteryPrize.WinnersByPercentage(nameof(LotteryPrize.WinnersByPercentage), "", prizePercentage, 1));
+				LotteryPrize.WinnersByPercentage(nameof(LotteryPrize.WinnersByPercentage), "", prizePercentage, 1, 1));
 		}
 
 		[Theory]
@@ -32,7 +32,7 @@ namespace SimplifiedLottery.Tests.Models
 		public void LotteryPrizeWinnersByCountMustBeValid(int winningPlayerCount)
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				LotteryPrize.WinnersByCount(nameof(LotteryPrize.WinnersByCount), "", 1, winningPlayerCount));
+				LotteryPrize.WinnersByCount(nameof(LotteryPrize.WinnersByCount), "", 1, winningPlayerCount, 1));
 		}
 
 		[Theory]
@@ -43,7 +43,7 @@ namespace SimplifiedLottery.Tests.Models
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
 				LotteryPrize.WinnersByPercentage(nameof(LotteryPrize.WinnersByPercentage), "", 1,
-					winningPlayerPercentage));
+					winningPlayerPercentage, 1));
 		}
 	}
 }

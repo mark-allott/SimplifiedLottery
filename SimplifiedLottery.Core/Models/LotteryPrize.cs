@@ -21,6 +21,9 @@ namespace SimplifiedLottery.Core.Models
 		/// <inheritdoc/>
 		public double? WinningTicketsPercentage { get; init; }
 
+		/// <inheritdoc/>
+		public int AllocationOrder { get; }
+
 		/// <summary>
 		/// Hidden constructor as we need either <see cref="WinningPlayerCount"/> or <see cref="WinningTicketsPercentage"/>
 		/// to be set, but not both (or neither!) 
@@ -30,8 +33,9 @@ namespace SimplifiedLottery.Core.Models
 		/// <param name="prizePercentage">The percentage of the total prize to allocate to this definition</param>
 		/// <param name="winningPlayerCount">Optional: prize allocation is determined by the number of players stated</param>
 		/// <param name="winningTicketsPercentage">Optional: prize allocation is determined by the percentage of total number of tickets sold</param>
+		/// <param name="allocationOrder">The order in which prize definitions should be applied (higher should be applied first)</param>
 		private LotteryPrize(string name, string description, double prizePercentage, int? winningPlayerCount,
-			double? winningTicketsPercentage)
+			double? winningTicketsPercentage, int allocationOrder)
 		{
 			ArgumentException.ThrowIfNullOrWhiteSpace(name);
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(prizePercentage);
@@ -42,6 +46,7 @@ namespace SimplifiedLottery.Core.Models
 			PrizePercentage = prizePercentage;
 			WinningPlayerCount = winningPlayerCount;
 			WinningTicketsPercentage = winningTicketsPercentage;
+			AllocationOrder = allocationOrder;
 		}
 
 		/// <summary>
@@ -51,13 +56,14 @@ namespace SimplifiedLottery.Core.Models
 		/// <param name="description">A more wordy description for the prize</param>
 		/// <param name="prizePercentage">The percentage of the total prize to allocate to this definition</param>
 		/// <param name="winningPlayerCount">The number of players who will share the prize pot</param>
+		/// <param name="allocationOrder">The order in which prize definitions should be applied (higher should be applied first)</param>
 		/// <returns>The prize definition</returns>
 		public static LotteryPrize WinnersByCount(string name, string description, double prizePercentage,
-			int winningPlayerCount)
+			int winningPlayerCount, int allocationOrder)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(winningPlayerCount);
 
-			return new LotteryPrize(name, description, prizePercentage, winningPlayerCount, null);
+			return new LotteryPrize(name, description, prizePercentage, winningPlayerCount, null, allocationOrder);
 		}
 
 		/// <summary>
@@ -67,14 +73,16 @@ namespace SimplifiedLottery.Core.Models
 		/// <param name="description">A more wordy description for the prize</param>
 		/// <param name="prizePercentage">The percentage of the total prize to allocate to this definition</param>
 		/// <param name="winningTicketsPercentage">The percentage of the total number of tickets that shall share the prize pot</param>
+		/// <param name="allocationOrder">The order in which prize definitions should be applied (higher should be applied first)</param>
 		/// <returns>The prize definition</returns>
 		public static LotteryPrize WinnersByPercentage(string name, string description, double prizePercentage,
-			double winningTicketsPercentage)
+			double winningTicketsPercentage, int allocationOrder)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(winningTicketsPercentage);
 			ArgumentOutOfRangeException.ThrowIfGreaterThan(winningTicketsPercentage, 100.0f);
 
-			return new LotteryPrize(name, description, prizePercentage, null, winningTicketsPercentage);
+			return new LotteryPrize(name, description, prizePercentage, null, winningTicketsPercentage,
+				allocationOrder);
 		}
 	}
 }
