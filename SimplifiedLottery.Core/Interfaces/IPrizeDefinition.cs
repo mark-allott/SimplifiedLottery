@@ -30,6 +30,6 @@ namespace SimplifiedLottery.Core.Interfaces
 		/// <summary>
 		/// Defines the order in which the prize definitions shall be applied when allocating the prizes
 		/// </summary>
-		int AllocationOrder { get; }
+		int AllocationPriority { get; }
 	}
 }

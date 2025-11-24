@@ -22,7 +22,7 @@ namespace SimplifiedLottery.Core.Models
 		public double? WinningTicketsPercentage { get; init; }
 
 		/// <inheritdoc/>
-		public int AllocationOrder { get; }
+		public int AllocationPriority { get; }
 
 		/// <summary>
 		/// Hidden constructor as we need either <see cref="WinningPlayerCount"/> or <see cref="WinningTicketsPercentage"/>
@@ -46,7 +46,7 @@ namespace SimplifiedLottery.Core.Models
 			PrizePercentage = prizePercentage;
 			WinningPlayerCount = winningPlayerCount;
 			WinningTicketsPercentage = winningTicketsPercentage;
-			AllocationOrder = allocationOrder;
+			AllocationPriority = allocationOrder;
 		}
 
 		/// <summary>
