@@ -24,6 +24,18 @@ namespace SimplifiedLottery.Core.Models
 		/// <inheritdoc/>
 		public int AllocationPriority { get; }
 
+		/// <inheritdoc/>
+		public int GetWinnerCount(int totalTickets)
+		{
+			if (WinningPlayerCount is null && WinningTicketsPercentage is null)
+				throw new ArgumentException("No value supplied for winners");
+
+			if(WinningPlayerCount.HasValue)
+				return WinningPlayerCount.Value;
+
+			return (int)(totalTickets * (WinningTicketsPercentage.Value / 100));
+		}
+
 		/// <summary>
 		/// Hidden constructor as we need either <see cref="WinningPlayerCount"/> or <see cref="WinningTicketsPercentage"/>
 		/// to be set, but not both (or neither!) 

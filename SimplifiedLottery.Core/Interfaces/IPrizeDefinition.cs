@@ -31,5 +31,12 @@ namespace SimplifiedLottery.Core.Interfaces
 		/// Defines the order in which the prize definitions shall be applied when allocating the prizes
 		/// </summary>
 		int AllocationPriority { get; }
+
+		/// <summary>
+		/// Returns the number of winners for the prize tier
+		/// </summary>
+		/// <param name="totalTickets">The total number of tickets sold for the draw</param>
+		/// <returns>The number of winners for the tier</returns>
+		int GetWinnerCount(int totalTickets);
 	}
 }
