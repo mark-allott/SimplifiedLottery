@@ -23,5 +23,15 @@ namespace SimplifiedLottery.Core.Interfaces
 		/// Provides access to the tickets bought through the service
 		/// </summary>
 		IEnumerable<T> Tickets { get; }
+
+		/// <summary>
+		/// Provides the cost per ticket for the service
+		/// </summary>
+		TT TicketCost { get; }
+
+		/// <summary>
+		/// Provides the upper limit on the number of tickets that can be bought via <see cref="BuyTickets"/>
+		/// </summary>
+		int MaxTicketsPerTransaction { get; }
 	}
 }
