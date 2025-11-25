@@ -19,7 +19,7 @@ namespace SimplifiedLottery.Core.Services
 		private IPlayerFormatter<IPlayer<int>, int> PlayerFormatter { get; }
 		private IWalletFormatter<int> WalletFormatter { get; }
 
-		public IntegerLotteryGameService(ILogger logger, IPlayerService<int> playerService,
+		public IntegerLotteryGameService(ILogger<IntegerLotteryGameService> logger, IPlayerService<int> playerService,
 			IFixedPriceTicketService<ITicket<int>, int> ticketService, ITicketBuyingStrategy<int> buyingStrategy,
 			IPrizeDefinitionService prizeDefinitionService, IPrizeAllocationService<int> prizeAllocationService,
 			IPlayerFormatter<IPlayer<int>, int> playerFormatter, IWalletFormatter<int> walletFormatter)
