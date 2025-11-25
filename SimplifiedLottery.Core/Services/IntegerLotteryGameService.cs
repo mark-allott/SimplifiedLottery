@@ -16,13 +16,13 @@ namespace SimplifiedLottery.Core.Services
 		private ITicketBuyingStrategy<int> BuyingStrategy { get; }
 		private IPrizeDefinitionService PrizeDefinitionService { get; }
 		private IPrizeAllocationService<int> PrizeAllocationService { get; }
-		private Func<IPlayer<int>, string> PlayerFormatter { get; }
-		private Func<int, string> WalletFormatter { get; }
+		private IPlayerFormatter<IPlayer<int>, int> PlayerFormatter { get; }
+		private IWalletFormatter<int> WalletFormatter { get; }
 
-		public IntegerLotteryGameService(ILogger logger, IPlayerService<int> playerService,
+		public IntegerLotteryGameService(ILogger<IntegerLotteryGameService> logger, IPlayerService<int> playerService,
 			IFixedPriceTicketService<ITicket<int>, int> ticketService, ITicketBuyingStrategy<int> buyingStrategy,
 			IPrizeDefinitionService prizeDefinitionService, IPrizeAllocationService<int> prizeAllocationService,
-			Func<IPlayer<int>, string> playerFormatter, Func<int, string> walletFormatter)
+			IPlayerFormatter<IPlayer<int>, int> playerFormatter, IWalletFormatter<int> walletFormatter)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			PlayerService = playerService ?? throw new ArgumentNullException(nameof(playerService));
@@ -64,7 +64,7 @@ namespace SimplifiedLottery.Core.Services
 				.ToDictionary();
 
 			var winnerDetails = winningTickets
-				.Select(s => new IntegerWinnerDetails()
+				.Select(s => new IntegerWinnerDetail()
 				{
 					PrizeAllocation = prizes[s.Key],
 					Winners = s.Value.GroupBy(g => g.Player).Select(w =>
@@ -78,10 +78,10 @@ namespace SimplifiedLottery.Core.Services
 			var drawProfit = prizeFund - totalPrizeCost;
 			Profit += drawProfit;
 
-			Logger.LogDebug("Total Prize Fund = {fund}; Total Revenue = {revenue}", WalletFormatter(prizeFund),
-				WalletFormatter(Revenue));
-			Logger.LogDebug("Draw profit = {drawProfit}, Total Profit = {profit}", WalletFormatter(drawProfit),
-				WalletFormatter(Profit));
+			Logger.LogDebug("Total Prize Fund = {fund}; Total Revenue = {revenue}", WalletFormatter.Format(prizeFund),
+				WalletFormatter.Format(Revenue));
+			Logger.LogDebug("Draw profit = {drawProfit}, Total Profit = {profit}", WalletFormatter.Format(drawProfit),
+				WalletFormatter.Format(Profit));
 			return winnerDetails;
 		}
 
@@ -120,9 +120,9 @@ namespace SimplifiedLottery.Core.Services
 				{
 					var payoutValue = winner.WinningTicketCount * prizeValue;
 					Logger.LogDebug("{player} wins on '{tier}' with {ticketCount} ticket{tp}, receiving {amount}",
-						PlayerFormatter(winner.Player), winnerTier.PrizeAllocation.PrizeDefinition.Name,
+						PlayerFormatter.FormatPlayer(winner.Player), winnerTier.PrizeAllocation.PrizeDefinition.Name,
 						winner.WinningTicketCount, winner.WinningTicketCount != 1 ? "s" : "",
-						WalletFormatter(payoutValue));
+						WalletFormatter.Format(payoutValue));
 					winner.Player.Wallet.AddFunds(payoutValue);
 				}
 			}
@@ -130,10 +130,10 @@ namespace SimplifiedLottery.Core.Services
 
 		private void ShowWelcomeMessage(IPlayer<int> player)
 		{
-			Logger.LogInformation("Welcome to the Simplified Lottery {Player}", PlayerFormatter(player));
-			Logger.LogInformation("Your current balance is: {balance}", WalletFormatter(player.Wallet.Balance));
+			Logger.LogInformation("Welcome to the Simplified Lottery {Player}", PlayerFormatter.FormatPlayer(player));
+			Logger.LogInformation("Your current balance is: {balance}", WalletFormatter.Format(player.Wallet.Balance));
 			Logger.LogInformation("Tickets are priced at: {ticketPrice} each",
-				WalletFormatter(TicketService.TicketCost));
+				WalletFormatter.Format(TicketService.TicketCost));
 		}
 
 		private List<IntegerPlayerTicket> GetPlayerTickets(IEnumerable<IPlayer<int>> players)
@@ -144,7 +144,7 @@ namespace SimplifiedLottery.Core.Services
 			{
 				var ticketsToBuy = BuyingStrategy.GetTicketsToBuy(player, TicketService.TicketCost);
 
-				Logger.LogDebug("{player} chooses to buy {count} ticket{plural}", PlayerFormatter(player), ticketsToBuy,
+				Logger.LogDebug("{player} chooses to buy {count} ticket{plural}", PlayerFormatter.FormatPlayer(player), ticketsToBuy,
 					ticketsToBuy != 1 ? "s" : "");
 				//	If the player does not wish to buy (or cannot), skip to next player
 				if (ticketsToBuy == 0)

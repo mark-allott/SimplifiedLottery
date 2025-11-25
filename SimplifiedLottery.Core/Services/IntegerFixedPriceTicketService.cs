@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Microsoft.Extensions.Options;
+using SimplifiedLottery.Core.Configuration;
 using SimplifiedLottery.Core.Interfaces;
 using SimplifiedLottery.Core.Models;
 
@@ -31,6 +33,15 @@ namespace SimplifiedLottery.Core.Services
 			TicketCost = ticketCost;
 			MaxTicketsPerTransaction = maxTicketsPerTransaction;
 			_tickets = [];
+		}
+
+		/// <summary>
+		/// Alternate constructor for use  with config options and DI
+		/// </summary>
+		/// <param name="options">Configuration options to specify ticket cost and maximum tickets per transaction</param>
+		public IntegerFixedPriceTicketService(IOptions<IntegerFixedPriceTicketServiceOptions> options)
+			: this(options.Value.TicketCost, options.Value.MaxTicketsPerTransaction)
+		{
 		}
 
 		#region ITicketService implementation

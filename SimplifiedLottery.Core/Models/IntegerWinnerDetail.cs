@@ -3,7 +3,7 @@ using SimplifiedLottery.Core.Interfaces;
 
 namespace SimplifiedLottery.Core.Models
 {
-	public record IntegerWinnerDetails
+	public record IntegerWinnerDetail
 		: IWinnerDetail<int>
 	{
 		/// <inheritdoc/>

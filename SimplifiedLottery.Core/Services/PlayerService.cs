@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Options;
+using SimplifiedLottery.Core.Configuration;
 using SimplifiedLottery.Core.Interfaces;
 using SimplifiedLottery.Core.Models;
 
@@ -26,6 +28,15 @@ namespace SimplifiedLottery.Core.Services
 			for (var i = 1; i <= totalPlayers; i++)
 				_players.Add(new PlayerWithIntegerWallet($"{i}", initialBalance));
 			_human = _players[0];
+		}
+
+		/// <summary>
+		/// Alternate constructor for use with config options and DI
+		/// </summary>
+		/// <param name="options">The number of players and initial balance from configuration</param>
+		public PlayerService(IOptions<IntegerPlayerServiceOptions> options)
+			: this(options.Value.TotalPlayers, options.Value.InitialBalance)
+		{
 		}
 
 		/// <inheritdoc/>

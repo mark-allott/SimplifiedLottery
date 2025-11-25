@@ -1,4 +1,6 @@
 using System;
+using Microsoft.Extensions.Options;
+using SimplifiedLottery.Core.Configuration;
 using SimplifiedLottery.Core.Formatters;
 using SimplifiedLottery.Core.Interfaces;
 
@@ -19,6 +21,15 @@ namespace SimplifiedLottery.Core.Strategies
 		{
 			MinimumTickets = Math.Min(minimumTickets, maximumTickets);
 			MaximumTickets = Math.Max(minimumTickets, maximumTickets);
+		}
+
+		/// <summary>
+		/// Alternate constructor for use  with config options and DI
+		/// </summary>
+		/// <param name="options">The minimum and maximum number of tickets that can be bought</param>
+		public IntegerTicketBuyingStrategy(IOptions<IntegerTicketBuyingStrategyOptions> options)
+			: this(options.Value.MinimumTickets, options.Value.MaximumTickets)
+		{
 		}
 
 		/// <inheritdoc/>
@@ -56,7 +67,8 @@ namespace SimplifiedLottery.Core.Strategies
 			var maxTickets = Math.Min(10, player.Wallet.Balance / ticketCost);
 			while (true)
 			{
-				Console.Write($"How many tickets do you want to buy, {PlayerFormatter<int>.FormatPlayer(player)}? Choose between 1 and {maxTickets}: ");
+				Console.Write(
+					$"How many tickets do you want to buy, {PlayerFormatter<int>.FormatPlayer(player)}? Choose between 1 and {maxTickets}: ");
 				var input = Console.ReadLine();
 				if (int.TryParse(input, out var ticketsToBuy) && ticketsToBuy >= 0 && ticketsToBuy <= maxTickets)
 					return ticketsToBuy;
