@@ -140,8 +140,7 @@ csharp_style_expression_bodied_methods = false:suggestion
 csharp_prefer_simple_default_expression = true:suggestion
 
 #   IDE0036
-csharp_preferred_modifier_order = private, protected, internal, public, file, static, extern, new, virtual, abstract, sealed, override:suggestion, readonly, unsafe, required, volatile, async:
-suggestion
+csharp_preferred_modifier_order = private, protected, internal, public, file, static, extern, new, virtual, abstract, sealed, override:suggestion, readonly, unsafe, required, volatile, async
 #   IDE0039
 csharp_style_prefer_local_over_anonymous_function = true:warning
 #   IDE0042
