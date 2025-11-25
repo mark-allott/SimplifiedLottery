@@ -21,7 +21,7 @@ namespace SimplifiedLottery.Tests.Services
 				.ToList();
 			actualPrizes.Should().NotBeNull();
 			actualPrizes.Should().HaveCount(1);
-			var actualPrize = actualPrizes[0];
+			var actualPrize = actualPrizes[0].Value;
 			actualPrize.PrizeWinnerCount.Should().Be(PrizeHelper.Tier1.WinningPlayerCount);
 			actualPrize.PrizeAmount.Should().Be(expectedPrize);
 		}
@@ -41,7 +41,7 @@ namespace SimplifiedLottery.Tests.Services
 				.ToList();
 			actualPrizes.Should().NotBeNull();
 			actualPrizes.Should().HaveCount(1);
-			var actualPrize = actualPrizes[0];
+			var actualPrize = actualPrizes[0].Value;
 			actualPrize.PrizeWinnerCount.Should().Be(PrizeHelper.Tier2.GetWinnerCount(ticketsSold));
 			actualPrize.PrizeAmount.Should().Be(expectedPrize);
 		}
@@ -63,7 +63,7 @@ namespace SimplifiedLottery.Tests.Services
 				.ToList();
 			actualPrizes.Should().NotBeNull();
 			actualPrizes.Should().HaveCount(1);
-			var actualPrize = actualPrizes[0];
+			var actualPrize = actualPrizes[0].Value;
 			actualPrize.PrizeWinnerCount.Should().Be(expectedWinners);
 			actualPrize.PrizeAmount.Should().Be(expectedPrize);
 		}
@@ -93,7 +93,7 @@ namespace SimplifiedLottery.Tests.Services
 			actualPrizes.Should().HaveCount(winnerCount.Length);
 			for (var i = 0; i < actualPrizes.Count; i++)
 			{
-				var tierPrize =  actualPrizes[i];
+				var tierPrize =  actualPrizes[i].Value;
 				tierPrize.PrizeWinnerCount.Should().Be(winnerCount[i]);
 				tierPrize.PrizeAmount.Should().Be(tierPrizes[i]);
 				totalPrizeFund -= (tierPrize.PrizeAmount * tierPrize.PrizeWinnerCount);

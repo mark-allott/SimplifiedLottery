@@ -19,18 +19,19 @@ namespace SimplifiedLottery.Core.Services
 		}
 
 		/// <summary>
-		/// Alternate constructor, allows specification of the prize calculation strategy to be used 
+		/// Alternate constructor, allows exact specification of the prize calculation strategy to be used 
 		/// </summary>
 		/// <param name="prizeCalculationStrategy"></param>
 		public IntegerPrizeAllocationService(IPrizeCalculationStrategy<int> prizeCalculationStrategy)
 		{
-			_prizeCalculationStrategy = prizeCalculationStrategy ?? throw new ArgumentNullException(nameof(prizeCalculationStrategy));
+			_prizeCalculationStrategy = prizeCalculationStrategy ??
+			                            throw new ArgumentNullException(nameof(prizeCalculationStrategy));
 		}
 
 		#region IPrizeAllocationService<int> Members
 
 		/// <inheritdoc/>
-		public IEnumerable<IPrizeAllocation<int>> CalculatePrizes(IEnumerable<IPrizeDefinition> prizeDefinitions,
+		public Dictionary<IPrizeDefinition, IPrizeAllocation<int>> CalculatePrizes(IEnumerable<IPrizeDefinition> prizeDefinitions,
 			int prizeFund, int ticketCount)
 		{
 			return CalculateIntegerPrizeAllocations(prizeDefinitions, prizeFund, ticketCount);
@@ -44,7 +45,7 @@ namespace SimplifiedLottery.Core.Services
 		/// <param name="ticketCount">The total number of tickets sold</param>
 		/// <returns>A list of <see cref="IntegerPrizeAllocation"/> objects, detailing the prizes to allocate</returns>
 		/// <exception cref="ArgumentException"></exception>
-		private List<IntegerPrizeAllocation> CalculateIntegerPrizeAllocations(
+		private Dictionary<IPrizeDefinition, IPrizeAllocation<int>> CalculateIntegerPrizeAllocations(
 			IEnumerable<IPrizeDefinition> prizeDefinitions, int prizeFund, int ticketCount)
 		{
 			ArgumentNullException.ThrowIfNull(prizeDefinitions);
@@ -60,13 +61,13 @@ namespace SimplifiedLottery.Core.Services
 			var sumOfAllocations = definitions.Sum(s => s.PrizePercentage);
 			ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(sumOfAllocations, 100.0f, nameof(prizeDefinitions));
 
-			var prizes = new List<IntegerPrizeAllocation>();
+			var prizes = new Dictionary<IPrizeDefinition, IPrizeAllocation<int>>();
 			definitions.ForEach(d =>
 			{
 				var winnerCount = d.GetWinnerCount(ticketCount);
 				var prizeForTier = d.PrizePercentage * prizeFund / 100;
 				var prizeValue = _prizeCalculationStrategy.Calculate((int)prizeForTier, winnerCount);
-				prizes.Add(new IntegerPrizeAllocation(d, winnerCount, prizeValue));
+				prizes.Add(d, new IntegerPrizeAllocation(d, winnerCount, prizeValue));
 			});
 			return prizes;
 		}

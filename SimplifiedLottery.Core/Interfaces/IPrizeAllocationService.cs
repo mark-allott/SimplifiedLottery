@@ -12,6 +12,7 @@ namespace SimplifiedLottery.Core.Interfaces
 		/// <param name="prizeFund">The total amount allocated to the prize fund</param>
 		/// <param name="ticketCount">The total number of tickets sold</param>
 		/// <returns>The prize allocated to each of the <paramref name="prizeDefinitions"/></returns>
-		IEnumerable<IPrizeAllocation<T>> CalculatePrizes(IEnumerable<IPrizeDefinition> prizeDefinitions, T prizeFund, int ticketCount);
+		Dictionary<IPrizeDefinition, IPrizeAllocation<T>> CalculatePrizes(
+			IEnumerable<IPrizeDefinition> prizeDefinitions, T prizeFund, int ticketCount);
 	}
 }
