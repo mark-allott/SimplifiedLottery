@@ -64,7 +64,7 @@ namespace SimplifiedLottery.Core.Services
 				.ToDictionary();
 
 			var winnerDetails = winningTickets
-				.Select(s => new IntegerWinnerDetails()
+				.Select(s => new IntegerWinnerDetail()
 				{
 					PrizeAllocation = prizes[s.Key],
 					Winners = s.Value.GroupBy(g => g.Player).Select(w =>
