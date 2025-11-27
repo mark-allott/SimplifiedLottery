@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -32,6 +35,11 @@ namespace SimplifiedLottery.ConsoleUi
 		private static IHost CreateHost(string[] args)
 		{
 			var hostBuilder = Host.CreateDefaultBuilder(args);
+			hostBuilder.ConfigureAppConfiguration(builder =>
+			{
+				var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)??Directory.GetCurrentDirectory();
+				builder.AddJsonFile(Path.Combine(exePath, "appsettings.json"));
+			});
 			hostBuilder.ConfigureServices((context, services) =>
 			{
 				services.Configure<IntegerPlayerServiceOptions>(
